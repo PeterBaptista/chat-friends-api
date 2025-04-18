@@ -1,18 +1,22 @@
-import { betterAuth } from 'better-auth';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import 'dotenv/config';
-import { db } from '../../drizzle';
-import { schema } from '../db';
+import { db } from "@/db";
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { schema } from "./db";
+
 
 export const auth = betterAuth({
-  trustedOrigins: [process.env.BASE_URL ?? ''],
+  trustedOrigins: [
+    process.env.NEXT_PUBLIC_APP_URL ?? "",
+    process.env.TUNELLING ?? "",
+  ],
   database: drizzleAdapter(db, {
-    provider: 'pg',
+    provider: "pg",
     schema: schema,
   }),
-  baseURL: process.env.BASE_URL!,
+  baseURL: process.env.NEXT_PUBLIC_APP_URL!,
 
   emailAndPassword: {
     enabled: true,
+
   },
 });

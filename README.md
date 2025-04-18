@@ -1,98 +1,120 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🚀 Express TypeScript Boilerplate 2024
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+[![CI](https://github.com/edwinhern/express-typescript-2024/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/edwinhern/express-typescript-2024/actions/workflows/ci.yml)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
+```code
+Hey There! 🙌
+🤾 that ⭐️ button if you like this boilerplate.
 ```
 
-## Compile and run the project
+## 🌟 Introduction
 
-```bash
-# development
-$ npm run start
+Welcome to the Express TypeScript Boilerplate 2024 – a streamlined, efficient, and scalable foundation for building powerful backend services with modern tools and practices in Express.js and TypeScript.
 
-# watch mode
-$ npm run start:dev
+## 💡 Motivation
 
-# production mode
-$ npm run start:prod
+This boilerplate aims to:
+
+- ✨ Reduce setup time for new projects
+- 📊 Ensure code consistency and quality
+- ⚡ Facilitate rapid development
+- 🛡️ Encourage best practices in security, testing, and performance
+
+## 🚀 Features
+
+- 📁 Modular Structure: Organized by feature for easy navigation and scalability
+- 💨 Faster Execution with tsx: Rapid TypeScript execution with `tsx` and type checking with `tsc`
+- 🌐 Stable Node Environment: Latest LTS Node version in `.nvmrc`
+- 🔧 Simplified Environment Variables: Managed with Envalid
+- 🔗 Path Aliases: Cleaner code with shortcut imports
+- 🔄 Renovate Integration: Automatic updates for dependencies
+- 🔒 Security: Helmet for HTTP header security and CORS setup
+- 📊 Logging: Efficient logging with `pino-http`
+- 🧪 Comprehensive Testing: Setup with Vitest and Supertest
+- ✅ Unified Code Style: `Biomejs` for consistent coding standards
+- 📃 API Response Standardization: `ServiceResponse` class for consistent API responses
+- 🐳 Docker Support: Ready for containerization and deployment
+- 📝 Input Validation with Zod: Strongly typed request validation using `Zod`
+- 🧩 Swagger UI: Interactive API documentation generated from Zod schemas
+
+## 🛠️ Getting Started
+
+### Video Demo
+
+For a visual guide, watch the [video demo](https://github.com/user-attachments/assets/b1698dac-d582-45a0-8d61-31131732b74e) to see the setup and running of the project.
+
+### Step-by-Step Guide
+
+#### Step 1: 🚀 Initial Setup
+
+- Clone the repository: `git clone https://github.com/edwinhern/express-typescript-2024.git`
+- Navigate: `cd express-typescript-2024`
+- Install dependencies: `npm ci`
+
+#### Step 2: ⚙️ Environment Configuration
+
+- Create `.env`: Copy `.env.template` to `.env`
+- Update `.env`: Fill in necessary environment variables
+
+#### Step 3: 🏃‍♂️ Running the Project
+
+- Development Mode: `npm run dev`
+- Building: `npm run build`
+- Production Mode: Set `.env` to `NODE_ENV="production"` then `npm run build && npm run start`
+
+## 🤝 Feedback and Contributions
+
+We'd love to hear your feedback and suggestions for further improvements. Feel free to contribute and join us in making backend development cleaner and faster!
+
+🎉 Happy coding!
+
+## 📁 Folder Structure
+
+```code
+├── Dockerfile
+├── README.md
+├── biome.json
+├── package-lock.json
+├── package.json
+├── src
+│   ├── api
+│   │   ├── healthCheck
+│   │   │   ├── __tests__
+│   │   │   │   └── healthCheckRouter.test.ts
+│   │   │   └── healthCheckRouter.ts
+│   │   └── user
+│   │       ├── __tests__
+│   │       │   ├── userRouter.test.ts
+│   │       │   └── userService.test.ts
+│   │       ├── userController.ts
+│   │       ├── userModel.ts
+│   │       ├── userRepository.ts
+│   │       ├── userRouter.ts
+│   │       └── userService.ts
+│   ├── api-docs
+│   │   ├── __tests__
+│   │   │   └── openAPIRouter.test.ts
+│   │   ├── openAPIDocumentGenerator.ts
+│   │   ├── openAPIResponseBuilders.ts
+│   │   └── openAPIRouter.ts
+│   ├── common
+│   │   ├── __tests__
+│   │   │   ├── errorHandler.test.ts
+│   │   │   └── requestLogger.test.ts
+│   │   ├── middleware
+│   │   │   ├── errorHandler.ts
+│   │   │   ├── rateLimiter.ts
+│   │   │   └── requestLogger.ts
+│   │   ├── models
+│   │   │   └── serviceResponse.ts
+│   │   └── utils
+│   │       ├── commonValidation.ts
+│   │       ├── envConfig.ts
+│   │       └── httpHandlers.ts
+│   ├── index.ts
+│   └── server.ts
+├── tsconfig.json
+└── vite.config.mts
+
+14 directories, 31 files
 ```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).

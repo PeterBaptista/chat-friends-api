@@ -1,35 +1,19 @@
-import 'dotenv/config';
-import { eq } from 'drizzle-orm';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { usersTable } from './db';
+import { env } from "@/common/utils/envConfig";
+import { app, logger } from "@/server";
 
-const db = drizzle(process.env.DATABASE_URL!);
-async function main() {
-  const user: typeof usersTable.$inferInsert = {
-    name: 'John',
-    age: 30,
-    email: 'john@example.com',
-  };
-  await db.insert(usersTable).values(user);
-  console.log('New user created!');
-  const users = await db.select().from(usersTable);
-  console.log('Getting all users from the database: ', users);
-  /*
-  const users: {
-    id: number;
-    name: string;
-    age: number;
-    email: string;
-  }[]
-  */
-  await db
-    .update(usersTable)
-    .set({
-      age: 31,
-    })
-    .where(eq(usersTable.email, user.email));
-  console.log('User info updated!');
-  await db.delete(usersTable).where(eq(usersTable.email, user.email));
-  console.log('User deleted!');
-}
-main();
+const server = app.listen(env.PORT, () => {
+	const { NODE_ENV, HOST, PORT } = env;
+	logger.info(`Server (${NODE_ENV}) running on port http://${HOST}:${PORT}`);
+});
+
+const onCloseSignal = () => {
+	logger.info("sigint received, shutting down");
+	server.close(() => {
+		logger.info("server closed");
+		process.exit();
+	});
+	setTimeout(() => process.exit(1), 10000).unref(); // Force shutdown after 10s
+};
+
+process.on("SIGINT", onCloseSignal);
+process.on("SIGTERM", onCloseSignal);
