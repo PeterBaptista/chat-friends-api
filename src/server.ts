@@ -4,8 +4,7 @@ import express, { type Express } from "express";
 import helmet from "helmet";
 import { pino } from "pino";
 
-import { openAPIRouter } from "@/api-docs/openAPIRouter";
-import { healthCheckRouter } from "@/api/healthCheck/healthCheckRouter";
+
 
 import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
@@ -36,18 +35,24 @@ app.use(   cors({
     origin: process.env.BASE_URL!, // Replace with your frontend's origin
     methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-  }));
+  },
+ ));
+ app.use(   cors({
+  origin: process.env.BASE_URL_TUNNELING!, // Replace with your frontend's origin
+  methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+},
+));
 app.all("/api/auth/*",  toNodeHandler(auth), );
 app.use(express.json());
 
 // Request logging
 app.use(requestLogger);
 
-app.use("/health-check", healthCheckRouter);
 
 
-// Swagger UI
-app.use(openAPIRouter);
+// // Swagger UI
+// app.use(openAPIRouter);
 
 // Error handlers
 app.use(errorHandler());
