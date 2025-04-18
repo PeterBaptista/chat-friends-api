@@ -18,5 +18,5 @@ healthCheckRegistry.registerPath({
 
 healthCheckRouter.get("/", (_req: Request, res: Response) => {
 	const serviceResponse = ServiceResponse.success("Service is healthy", null);
-	return handleServiceResponse(serviceResponse, res);
+	handleServiceResponse(serviceResponse, res);
 });
