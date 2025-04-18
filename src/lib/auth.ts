@@ -1,19 +1,19 @@
-import { db } from "@/db";
+
+import { db } from "@/drizzle";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { schema } from "./db";
+import { schema } from "../db";
 
 
 export const auth = betterAuth({
   trustedOrigins: [
-    process.env.NEXT_PUBLIC_APP_URL ?? "",
-    process.env.TUNELLING ?? "",
+    process.env.BASE_URL!
   ],
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: schema,
   }),
-  baseURL: process.env.NEXT_PUBLIC_APP_URL!,
+  baseURL: process.env.BASE_URL!,
 
   emailAndPassword: {
     enabled: true,
