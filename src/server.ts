@@ -23,23 +23,24 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(helmet());
 app.use(rateLimiter);
+app.use(cors());
 
 // For ExpressJS v4
 // app.all("/api/auth/*splat", toNodeHandler(auth)); For ExpressJS v5
 
 // Mount express json middleware after Better Auth handler
 // or only apply it to routes that don't interact with Better Auth
-app.use(
-	cors({
-		origin: process.env.BASE_URL, // Replace with your frontend's origin
-		methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
-		credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-	}),
-);
-app.all("/api/auth/*", toNodeHandler(auth));
+// app.use(
+// 	cors({
+// 		origin: process.env.BASE_URL, // Replace with your frontend's origin
+// 		methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
+// 		credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+// 	}),
+// );
+app.all("/api/auth/*", cors(), toNodeHandler(auth));
 app.use(express.json());
 
-app.use("/messages", messagesRouter);
+app.use("/messages", cors(), messagesRouter);
 
 // Request logging
 app.use(requestLogger);
