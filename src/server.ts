@@ -23,16 +23,8 @@ app.use(
 		credentials: true,
 	}),
 );
-app.set("trust proxy", true);
 
 // Middlewares
-
-app.use(express.urlencoded({ extended: true }));
-
-app.use(helmet());
-app.use(rateLimiter);
-// Request logging
-app.use(requestLogger());
 
 // For ExpressJS v4
 // app.all("/api/auth/*splat", toNodeHandler(auth)); For ExpressJS v5
