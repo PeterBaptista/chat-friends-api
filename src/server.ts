@@ -17,13 +17,14 @@ const logger = pino({ name: "server start" });
 const app: Express = express();
 
 // Set the application to trust the reverse proxy
-app.use(
-	cors({
-		origin: process.env.CORS_ORIGIN,
-		credentials: true,
-	}),
-);
-
+app.use(cors({
+  origin: (origin, callback) =>{ 
+	console.log(origin);
+	return callback(null, origin)
+	},
+  credentials: true,
+}));
+  
 // Middlewares
 
 // For ExpressJS v4
