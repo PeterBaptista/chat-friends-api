@@ -4,8 +4,6 @@ import express, { type Express } from "express";
 import helmet from "helmet";
 import { pino } from "pino";
 
-
-
 import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
@@ -31,25 +29,18 @@ app.use(rateLimiter);
 
 // Mount express json middleware after Better Auth handler
 // or only apply it to routes that don't interact with Better Auth
-app.use(   cors({
-    origin: process.env.BASE_URL!, // Replace with your frontend's origin
-    methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
-    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-  },
- ));
- app.use(   cors({
-  origin: process.env.BASE_URL_TUNNELING!, // Replace with your frontend's origin
-  methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
-  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-},
-));
-app.all("/api/auth/*",  toNodeHandler(auth), );
+// app.use(
+// 	cors({
+// 		origin: process.env.BASE_URL, // Replace with your frontend's origin
+// 		methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
+// 		credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+// 	}),
+// );
+app.all("/api/auth/*", toNodeHandler(auth));
 app.use(express.json());
 
-// Request logging
-app.use(requestLogger);
-
-
+app.use("/messages", messagesRouter);
+app.use("/users", usersRouter);
 
 // // Swagger UI
 // app.use(openAPIRouter);
