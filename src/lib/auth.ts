@@ -5,7 +5,12 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 import { schema } from "../db";
 
-
+console.log("settings", {
+	secure: process.env.NODE_ENV === "production" ? true : false,
+	httpOnly: process.env.NODE_ENV === "production" ? true : false,
+	sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+	partitioned: process.env.NODE_ENV === "production" ? true : false, // bom deixar por padrão pra navegadores mais novos
+  },)
 
 export const auth = betterAuth({
 	trustedOrigins: [process.env.CORS_ORIGIN ?? "", process.env.CORS_ORIGIN2 ?? ""],
@@ -14,6 +19,10 @@ export const auth = betterAuth({
 	  schema: schema,
 	}),
 	advanced: {
+		crossSubDomainCookies: {
+            enabled: true,
+            domain: ".example.com", // Domain with a leading period
+        },
 	  defaultCookieAttributes: {
 		secure: process.env.NODE_ENV === "production" ? true : false,
 		httpOnly: process.env.NODE_ENV === "production" ? true : false,
