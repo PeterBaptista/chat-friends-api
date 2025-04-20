@@ -25,6 +25,7 @@ export const auth = betterAuth({
 			secure: process.env.NODE_ENV === "production",
 			httpOnly: process.env.NODE_ENV === "production",
 			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+			domain: process.env.BETTER_AUTH_DOMAIN,
 			// bom deixar por padrão pra navegadores mais novos
 		},
 	},
