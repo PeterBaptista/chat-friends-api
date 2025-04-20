@@ -20,8 +20,8 @@ export const auth = betterAuth({
 	}),
 	advanced: {
 		crossSubDomainCookies: {
-            enabled: true,
-            domain: ".example.com", // Domain with a leading period
+			enabled: false
+        
         },
 	  defaultCookieAttributes: {
 		secure: process.env.NODE_ENV === "production" ? true : false,
