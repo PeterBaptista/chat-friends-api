@@ -9,7 +9,7 @@ console.log("settings", {
 	secure: process.env.NODE_ENV === "production" ? true : false,
 	httpOnly: process.env.NODE_ENV === "production" ? true : false,
 	sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-	partitioned:false, // bom deixar por padrão pra navegadores mais novos
+	partitioned: process.env.NODE_ENV === "production" ? true : false, // bom deixar por padrão pra navegadores mais novos
   },)
 
 export const auth = betterAuth({
@@ -19,16 +19,19 @@ export const auth = betterAuth({
 	  schema: schema,
 	}),
 	advanced: {
-  crossSubDomainCookies: {
-    enabled: false, // <-- isso aqui!
-  },
-  defaultCookieAttributes: {
-    secure: process.env.NODE_ENV === "production",
-    httpOnly: true,
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    maxAge: 60 * 60 * 24 * 7
-  },
-},
+		useSecureCookies: true,
+		crossSubDomainCookies: 
+		{
+		enabled:true,	
+		},
+
+	  defaultCookieAttributes: {
+		secure: process.env.NODE_ENV === "production" ? true : false,
+		httpOnly: process.env.NODE_ENV === "production" ? true : false,
+		sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+	 // bom deixar por padrão pra navegadores mais novos
+	  },
+	},
 	baseURL: process.env.BASE_URL,
   
 	emailAndPassword: {
