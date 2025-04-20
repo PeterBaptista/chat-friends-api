@@ -41,6 +41,7 @@ app.use(cors({
 // 	}),
 // );
 app.all("*", (req: Request, res, next) => {
+	console.log("path", req.path)
 	console.log("req",req.headersDistinct)
 	next();
 });
