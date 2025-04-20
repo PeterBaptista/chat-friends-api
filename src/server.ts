@@ -1,7 +1,7 @@
 import "dotenv/config";
 import cors from "cors";
 
-import express, { type Express } from "express";
+import express, { Request, type Express } from "express";
 import helmet from "helmet";
 import { pino } from "pino";
 
@@ -19,9 +19,10 @@ const app: Express = express();
 // Set the application to trust the reverse proxy
 app.use(cors({
   origin: (origin, callback) =>{ 
-	console.log(origin);
+	console.log("origin",origin);
 	return callback(null, origin)
 	},
+	
   credentials: true,
 }));
   
@@ -39,11 +40,16 @@ app.use(cors({
 // 		credentials: true, // Allow credentials (cookies, authorization headers, etc.)
 // 	}),
 // );
+app.all("*", (req: Request, res, next) => {
+	console.log("req",req.headersDistinct)
+	next();
+});
 app.all("/api/auth/*", toNodeHandler(auth));
 app.use(express.json());
 
 app.use("/messages", messagesRouter);
 app.use("/users", usersRouter);
+
 
 // // Swagger UI
 // app.use(openAPIRouter);
