@@ -1,14 +1,11 @@
 import "dotenv/config";
 import cors from "cors";
-
+// biome-ignore lint/style/useImportType: <explanation>
 import express, { Request, type Express } from "express";
-import helmet from "helmet";
 import { pino } from "pino";
 
 import errorHandler from "@/common/middleware/errorHandler";
-import rateLimiter from "@/common/middleware/rateLimiter";
-import { requestLogger } from "@/common/middleware/requestLogger";
-import { toNodeHandler } from "better-auth/node";
+import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { messagesRouter } from "./api/messages/messagesRouter";
 import { usersRouter } from "./api/users/usersRouter";
 import { auth } from "./lib/auth";
@@ -17,15 +14,17 @@ const logger = pino({ name: "server start" });
 const app: Express = express();
 
 // Set the application to trust the reverse proxy
-app.use(cors({
-  origin: (origin, callback) =>{ 
-	console.log("origin",origin);
-	return callback(null, origin)
-	},
-	
-  credentials: true,
-}));
-  
+app.use(
+	cors({
+		origin: (origin, callback) => {
+			console.log("origin", origin);
+			return callback(null, origin);
+		},
+
+		credentials: true,
+	}),
+);
+
 // Middlewares
 
 // For ExpressJS v4
@@ -41,16 +40,23 @@ app.use(cors({
 // 	}),
 // );
 app.all("*", (req: Request, res, next) => {
-	console.log("path", req.path)
-	console.log("req",req.headersDistinct)
+	console.log("path", req.path);
+	console.log("req", req.headersDistinct);
 	next();
 });
 app.all("/api/auth/*", toNodeHandler(auth));
+
+app.get("/api/me", async (req, res) => {
+	const session = await auth.api.getSession({
+		headers: fromNodeHeaders(req.headers),
+	});
+	console.log("session", session);
+	res.json(session);
+});
 app.use(express.json());
 
 app.use("/messages", messagesRouter);
 app.use("/users", usersRouter);
-
 
 // // Swagger UI
 // app.use(openAPIRouter);
