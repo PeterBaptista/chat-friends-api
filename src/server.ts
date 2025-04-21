@@ -9,6 +9,7 @@ import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { messagesRouter } from "./api/messages/messagesRouter";
 import { usersRouter } from "./api/users/usersRouter";
 import { auth } from "./lib/auth";
+import { requireAuth } from "./utils/utils";
 
 const logger = pino({ name: "server start" });
 const app: Express = express();
@@ -39,20 +40,18 @@ app.use(
 // 		credentials: true, // Allow credentials (cookies, authorization headers, etc.)
 // 	}),
 // );
-app.all("*", (req: Request, res, next) => {
-	console.log("path", req.path);
-	console.log("req", req.headersDistinct);
-	next();
-});
+
 app.all("/api/auth/*", toNodeHandler(auth));
 
 app.get("/api/me", async (req, res) => {
 	const session = await auth.api.getSession({
 		headers: fromNodeHeaders(req.headers),
 	});
-	console.log("session", session);
+
 	res.json(session);
 });
+
+app.all("*", requireAuth);
 app.use(express.json());
 
 app.use("/messages", messagesRouter);
