@@ -28,7 +28,5 @@ export async function getMessagesFromUser(req: Request, res: Response) {
 			),
 		);
 
-	console.log("result", result);
-
 	res.json(result);
 }
