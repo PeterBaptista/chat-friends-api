@@ -1,7 +1,7 @@
 import "dotenv/config";
 import cors from "cors";
-// biome-ignore lint/style/useImportType: <explanation>
-import express, { Request, type Express } from "express";
+
+import express, { type Express } from "express";
 import { pino } from "pino";
 
 import errorHandler from "@/common/middleware/errorHandler";

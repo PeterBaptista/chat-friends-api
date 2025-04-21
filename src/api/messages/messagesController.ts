@@ -2,7 +2,7 @@ import { messages } from "@/db/schemas";
 import { db } from "@/drizzle";
 import { auth } from "@/lib/auth";
 import { fromNodeHeaders } from "better-auth/node";
-import { eq, ne } from "drizzle-orm";
+import { and, eq, or } from "drizzle-orm";
 import type { Request, Response } from "express";
 
 export async function getMessages(req: Request, res: Response) {
@@ -16,12 +16,19 @@ export async function getMessagesFromUser(req: Request, res: Response) {
 		headers: fromNodeHeaders(req.headers),
 	});
 
-	const filters = [];
-	if (session?.user.id) {
-		filters.push(eq(messages.userFromId, session.user.id));
-	}
+	const { userToId } = req.params;
 
-	const result = await db.select().from(messages);
+	const result = await db
+		.select()
+		.from(messages)
+		.where(
+			or(
+				and(eq(messages.userToId, userToId), eq(messages.userFromId, session?.user.id ?? "")),
+				and(eq(messages.userFromId, userToId), eq(messages.userToId, session?.user.id ?? "")),
+			),
+		);
+
+	console.log("result", result);
 
 	res.json(result);
 }
