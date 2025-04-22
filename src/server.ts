@@ -7,7 +7,8 @@ import { pino } from "pino";
 import errorHandler from "@/common/middleware/errorHandler";
 import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { messagesRouter } from "./api/messages/messagesRouter";
-import { PasswordRecoveryEmail } from "./api/recoveryPassword/recoveryPasswordRouter";
+
+import { inviteRouter } from "./api/invites/invitesRouter";
 import { usersRouter } from "./api/users/usersRouter";
 import { auth } from "./lib/auth";
 import { requireAuth } from "./utils/utils";
@@ -57,7 +58,7 @@ app.use(express.json());
 
 app.use("/messages", messagesRouter);
 app.use("/users", usersRouter);
-app.use("/recovery-password", PasswordRecoveryEmail);
+app.use("/invites", inviteRouter);
 
 // // Swagger UI
 // app.use(openAPIRouter);

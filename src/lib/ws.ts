@@ -3,7 +3,7 @@ import { logger } from "@/server";
 import { v4 as uuidv4 } from "uuid";
 import { type WebSocket, WebSocketServer } from "ws";
 
-import { messages } from "../db/schemas/schema";
+import { invitesTable, messages } from "../db/schemas/schema";
 import { db } from "../drizzle";
 
 // Extend the WebSocket type from 'ws' package, not from 'node:http'
@@ -27,21 +27,33 @@ export const setupWebSocketServer = (server: Server) => {
 				return;
 			}
 
-			// Otherwise, treat it as a chat message
-			await db.insert(messages).values({
-				id: messageParsed.id,
-				sendAt: new Date(messageParsed?.sendAt),
-				userFromId: messageParsed?.userFromId,
-				userToId: messageParsed?.userToId,
-				content: messageParsed?.content,
-			});
+			if (messageParsed.type === "invite") {
+				logger.info(`✅ Client invited user ${messageParsed?.userToId}`);
+				await db.insert(invitesTable).values({
+					userFromId: messageParsed?.userFromId,
+					userToId: messageParsed?.userToId,
+					status: messageParsed?.status,
+					createdAt: new Date(messageParsed?.createdAt),
+				});
+			}
+
+			if (messageParsed.type === "message") {
+				logger.info(`✅ Client sent message to user ${messageParsed?.userToId}`);
+				await db.insert(messages).values({
+					id: messageParsed.id,
+					sendAt: new Date(messageParsed?.sendAt),
+					userFromId: messageParsed?.userFromId,
+					userToId: messageParsed?.userToId,
+					content: messageParsed?.content,
+				});
+			}
 
 			// Send to the intended recipient only
 			for (const client of wss.clients) {
 				const c = client as ExtendedWebSocket;
 
 				if (c.readyState === ws.OPEN && c.userId === messageParsed.userToId) {
-					console.log("sending: ", c.userId, messageParsed.userToId);
+					logger.info("sending: ", c.userId, messageParsed.userToId);
 					c.send(message);
 				}
 			}
