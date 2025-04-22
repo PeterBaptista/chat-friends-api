@@ -11,8 +11,8 @@ setupWebSocketServer(server);
 
 // Start HTTP server
 server.listen(env.PORT, () => {
-	const { NODE_ENV, PORT } = env;
-	logger.info(`Server (${NODE_ENV}) running at http://localhost:${PORT}`);
+	const { NODE_ENV, PORT, HOST } = env;
+	logger.info(`Server (${NODE_ENV}) running at http://${HOST}:${PORT}`);
 });
 
 // Graceful shutdown
