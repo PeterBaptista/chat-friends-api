@@ -1,3 +1,4 @@
+import "dotenv/config";
 import cors from "cors";
 // biome-ignore lint/style/useImportType: <explanation>
 import express, { Request, type Express } from "express";
@@ -8,10 +9,10 @@ import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { messagesRouter } from "./api/messages/messagesRouter";
 import { usersRouter } from "./api/users/usersRouter";
 import { auth } from "./lib/auth";
+import { PasswordRecoveryEmail } from "./api/recoveryPassword/recoveryPasswordRouter";
 
 const logger = pino({ name: "server start" });
 const app: Express = express();
-
 
 // Set the application to trust the reverse proxy
 app.use(
@@ -27,12 +28,7 @@ app.use(
 
 // Middlewares
 
-app.use(express.urlencoded({ extended: true }));
-
-app.use(helmet());
-app.use(rateLimiter);
-
- // For ExpressJS v4
+// For ExpressJS v4
 // app.all("/api/auth/*splat", toNodeHandler(auth)); For ExpressJS v5
 
 // Mount express json middleware after Better Auth handler
@@ -62,6 +58,7 @@ app.use(express.json());
 
 app.use("/messages", messagesRouter);
 app.use("/users", usersRouter);
+app.use("/recovery-password", PasswordRecoveryEmail)
 
 // // Swagger UI
 // app.use(openAPIRouter);
