@@ -3,7 +3,9 @@ import { logger } from "@/server";
 import { v4 as uuidv4 } from "uuid";
 import { type WebSocket, WebSocketServer } from "ws";
 
-import { invitesTable, messages } from "../db/schemas/schema";
+import { handleInvite } from "@/api/invites/handleInvite";
+import { and, eq } from "drizzle-orm";
+import { friendsTable, invitesTable, messages } from "../db/schemas/schema";
 import { db } from "../drizzle";
 
 // Extend the WebSocket type from 'ws' package, not from 'node:http'
@@ -28,13 +30,7 @@ export const setupWebSocketServer = (server: Server) => {
 			}
 
 			if (messageParsed.type === "invite") {
-				logger.info(`✅ Client invited user ${messageParsed?.userToId}`);
-				await db.insert(invitesTable).values({
-					userFromId: messageParsed?.userFromId,
-					userToId: messageParsed?.userToId,
-					status: messageParsed?.status,
-					createdAt: new Date(messageParsed?.createdAt),
-				});
+				handleInvite(messageParsed);
 			}
 
 			if (messageParsed.type === "message") {
