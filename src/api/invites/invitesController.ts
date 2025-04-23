@@ -33,6 +33,7 @@ export async function getInvites(req: Request, res: Response) {
 }
 export async function respondInvite(req: Request, res: Response) {
 	try {
+		const { inviteId } = req.params;
 		const session = await auth.api.getSession({
 			headers: fromNodeHeaders(req.headers),
 		});
@@ -44,13 +45,25 @@ export async function respondInvite(req: Request, res: Response) {
 			.update(invitesTable)
 			.set({
 				status: req.body.status,
+				responseAt: new Date(),
 			})
-			.where(eq(invitesTable.userFromId, session.user.id));
+			.where(eq(invitesTable.id, inviteId));
+
+		if (req.body.status === "rejected") {
+			return res.json(result);
+		}
+
+		const invite = await db.select().from(invitesTable).where(eq(invitesTable.id, inviteId));
+
+		if (invite.length === 0) {
+			res.status(404).json({ error: "Invite not found" });
+			return;
+		}
 
 		await db.insert(friendsTable).values({
-			id: uuidv4(),
-			user_id1: session.user.id,
-			user_id2: req.body.userToId,
+			id: inviteId,
+			user_id1: invite[0].userFromId,
+			user_id2: invite[0].userToId,
 			createdAt: new Date(),
 		});
 
