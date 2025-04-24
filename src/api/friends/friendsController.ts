@@ -10,8 +10,6 @@ export async function getFriends(req: Request, res: Response) {
 		headers: fromNodeHeaders(req.headers),
 	});
 
-	console.log("session", session);
-
 	if (!session?.user.id) {
 		res.status(401).json({ error: "Unauthorized" });
 		return;
@@ -37,6 +35,5 @@ export async function getFriends(req: Request, res: Response) {
 
 		.where(or(eq(friendsTable.user_id1, userId), eq(friendsTable.user_id2, userId)));
 
-	console.log(friends);
 	res.json(friends);
 }

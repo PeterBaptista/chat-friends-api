@@ -19,12 +19,7 @@ export async function getInvites(req: Request, res: Response) {
 			.select()
 			.from(invitesTable)
 			.innerJoin(user, eq(invitesTable.userFromId, user.id))
-			.where(
-				and(
-					eq(invitesTable.status, "pending"),
-					or(eq(invitesTable.userFromId, session.user.id), eq(invitesTable.userToId, session.user.id)),
-				),
-			);
+			.where(and(eq(invitesTable.status, "pending"), eq(invitesTable.userToId, session.user.id)));
 
 		res.json(result);
 	} catch (error) {
@@ -50,7 +45,8 @@ export async function respondInvite(req: Request, res: Response) {
 			.where(eq(invitesTable.id, inviteId));
 
 		if (req.body.status === "rejected") {
-			return res.json(result);
+			res.json(result);
+			return;
 		}
 
 		const invite = await db.select().from(invitesTable).where(eq(invitesTable.id, inviteId));

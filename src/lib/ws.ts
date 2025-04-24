@@ -3,13 +3,13 @@ import { logger } from "@/server";
 import { v4 as uuidv4 } from "uuid";
 import { type WebSocket, WebSocketServer } from "ws";
 
-import { handleInvite } from "@/api/invites/handleInvite";
+import { handleInvite, handleInviteConfirm } from "@/api/invites/handleInvite";
 import { and, eq } from "drizzle-orm";
 import { friendsTable, invitesTable, messages } from "../db/schemas/schema";
 import { db } from "../drizzle";
 
 // Extend the WebSocket type from 'ws' package, not from 'node:http'
-type ExtendedWebSocket = WebSocket & { userId?: string };
+export type ExtendedWebSocket = WebSocket & { userId?: string };
 
 export const setupWebSocketServer = (server: Server) => {
 	const wss = new WebSocketServer({ server });
@@ -30,7 +30,13 @@ export const setupWebSocketServer = (server: Server) => {
 			}
 
 			if (messageParsed.type === "invite") {
-				handleInvite(messageParsed);
+				handleInvite(messageParsed, wss, ws);
+				return;
+			}
+
+			if (messageParsed.type === "invite-confirm") {
+				handleInviteConfirm(messageParsed, wss, ws);
+				return;
 			}
 
 			if (messageParsed.type === "message") {
@@ -49,7 +55,7 @@ export const setupWebSocketServer = (server: Server) => {
 				const c = client as ExtendedWebSocket;
 
 				if (c.readyState === ws.OPEN && c.userId === messageParsed.userToId) {
-					logger.info("sending: ", c.userId, messageParsed.userToId);
+					logger.info("sending: ", c.userId);
 					c.send(message);
 				}
 			}
