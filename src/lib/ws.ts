@@ -4,7 +4,8 @@ import { v4 as uuidv4 } from "uuid";
 import { type WebSocket, WebSocketServer } from "ws";
 
 import { handleInvite, handleInviteConfirm } from "@/api/invites/handleInvite";
-import { and, eq } from "drizzle-orm";
+import { handleMessage } from "@/api/messages/handleMessage";
+import { and, eq, or } from "drizzle-orm";
 import { friendsTable, invitesTable, messages } from "../db/schemas/schema";
 import { db } from "../drizzle";
 
@@ -40,25 +41,11 @@ export const setupWebSocketServer = (server: Server) => {
 			}
 
 			if (messageParsed.type === "message") {
-				logger.info(`✅ Client sent message to user ${messageParsed?.userToId}`);
-				await db.insert(messages).values({
-					id: messageParsed.id,
-					sendAt: new Date(messageParsed?.sendAt),
-					userFromId: messageParsed?.userFromId,
-					userToId: messageParsed?.userToId,
-					content: messageParsed?.content,
-				});
+				handleMessage(messageParsed, wss, ws);
+				return;
 			}
 
 			// Send to the intended recipient only
-			for (const client of wss.clients) {
-				const c = client as ExtendedWebSocket;
-
-				if (c.readyState === ws.OPEN && c.userId === messageParsed.userToId) {
-					logger.info("sending: ", c.userId);
-					c.send(message);
-				}
-			}
 		});
 
 		ws.on("close", () => {
