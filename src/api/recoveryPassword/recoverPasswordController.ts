@@ -12,9 +12,7 @@ export async function sendPasswordRecoveryEmail(req: Request, res: Response) {
 			},
 		});
 
-		console.log(response);
-
-		res.status(200).json({ message: "Password recovery email sent" });
+		res.status(200).json({ message: response });
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ error: error instanceof Error ? error.message : "An unknown error occurred" });
