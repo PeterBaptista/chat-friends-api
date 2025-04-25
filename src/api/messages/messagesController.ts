@@ -6,6 +6,7 @@ import { and, eq, or } from "drizzle-orm";
 import type { Request, Response } from "express";
 
 export async function getMessages(req: Request, res: Response) {
+	console.log("getMessages");
 	const result = await db.select().from(messages);
 
 	res.json(result);

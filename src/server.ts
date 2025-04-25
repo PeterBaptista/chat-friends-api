@@ -1,5 +1,5 @@
-import "dotenv/config";
 import cors from "cors";
+import "dotenv/config";
 
 import express, { type Express } from "express";
 import { pino } from "pino";
@@ -7,7 +7,9 @@ import { pino } from "pino";
 import errorHandler from "@/common/middleware/errorHandler";
 import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { messagesRouter } from "./api/messages/messagesRouter";
-import { PasswordRecoveryEmail } from "./api/recoveryPassword/recoveryPasswordRouter";
+
+import { friendsRouter } from "./api/friends/friendsRouter";
+import { inviteRouter } from "./api/invites/invitesRouter";
 import { usersRouter } from "./api/users/usersRouter";
 import { auth } from "./lib/auth";
 import { requireAuth } from "./utils/utils";
@@ -42,6 +44,10 @@ app.use(
 // 	}),
 // );
 
+app.get("/test", (req, res) => {
+	res.json({ message: "Hello World" });
+});
+
 app.all("/api/auth/*", toNodeHandler(auth));
 
 app.get("/api/me", async (req, res) => {
@@ -57,7 +63,8 @@ app.use(express.json());
 
 app.use("/messages", messagesRouter);
 app.use("/users", usersRouter);
-app.use("/recovery-password", PasswordRecoveryEmail);
+app.use("/invites", inviteRouter);
+app.use("/friends", friendsRouter);
 
 // // Swagger UI
 // app.use(openAPIRouter);

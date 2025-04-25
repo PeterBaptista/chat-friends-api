@@ -1,7 +1,7 @@
-import "dotenv/config";
 import { db } from "@/drizzle";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import "dotenv/config";
 
 import { sendResetPassword } from "@/utils/utils";
 import { schema } from "../db";
@@ -19,6 +19,8 @@ export const auth = betterAuth({
 		provider: "pg",
 		schema: schema,
 	}),
+
+
 	advanced: {
 		useSecureCookies: process.env.NODE_ENV === "production",
 		crossSubDomainCookies: {

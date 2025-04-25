@@ -3,11 +3,14 @@ import { logger } from "@/server";
 import { v4 as uuidv4 } from "uuid";
 import { type WebSocket, WebSocketServer } from "ws";
 
-import { messages } from "../db/schemas/schema";
+import { handleInvite, handleInviteConfirm } from "@/api/invites/handleInvite";
+import { handleMessage } from "@/api/messages/handleMessage";
+import { and, eq, or } from "drizzle-orm";
+import { friendsTable, invitesTable, messages } from "../db/schemas/schema";
 import { db } from "../drizzle";
 
 // Extend the WebSocket type from 'ws' package, not from 'node:http'
-type ExtendedWebSocket = WebSocket & { userId?: string };
+export type ExtendedWebSocket = WebSocket & { userId?: string };
 
 export const setupWebSocketServer = (server: Server) => {
 	const wss = new WebSocketServer({ server });
@@ -27,24 +30,22 @@ export const setupWebSocketServer = (server: Server) => {
 				return;
 			}
 
-			// Otherwise, treat it as a chat message
-			await db.insert(messages).values({
-				id: messageParsed.id,
-				sendAt: new Date(messageParsed?.sendAt),
-				userFromId: messageParsed?.userFromId,
-				userToId: messageParsed?.userToId,
-				content: messageParsed?.content,
-			});
+			if (messageParsed.type === "invite") {
+				handleInvite(messageParsed, wss, ws);
+				return;
+			}
+
+			if (messageParsed.type === "invite-confirm") {
+				handleInviteConfirm(messageParsed, wss, ws);
+				return;
+			}
+
+			if (messageParsed.type === "message") {
+				handleMessage(messageParsed, wss, ws);
+				return;
+			}
 
 			// Send to the intended recipient only
-			for (const client of wss.clients) {
-				const c = client as ExtendedWebSocket;
-
-				if (c.readyState === ws.OPEN && c.userId === messageParsed.userToId) {
-					console.log("sending: ", c.userId, messageParsed.userToId);
-					c.send(message);
-				}
-			}
 		});
 
 		ws.on("close", () => {
