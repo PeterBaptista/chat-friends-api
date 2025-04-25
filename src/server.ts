@@ -1,5 +1,5 @@
-import "dotenv/config";
 import cors from "cors";
+import "dotenv/config";
 
 import express, { type Express } from "express";
 import { pino } from "pino";
@@ -43,6 +43,10 @@ app.use(
 // 		credentials: true, // Allow credentials (cookies, authorization headers, etc.)
 // 	}),
 // );
+
+app.get("/test", (req, res) => {
+	res.json({ message: "Hello World" });
+});
 
 app.all("/api/auth/*", toNodeHandler(auth));
 

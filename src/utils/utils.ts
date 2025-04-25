@@ -1,7 +1,9 @@
 import { auth } from "@/lib/auth";
+import { app } from "@/server";
 import { fromNodeHeaders } from "better-auth/node";
 import type { User } from "better-auth/types";
 import nodemailer from "nodemailer";
+import request from "supertest";
 
 export async function sendResetPassword(token: string, url: string, user: User) {
 	const html = `
@@ -43,3 +45,18 @@ export const requireAuth: any = async (req: any, res: any, next: any) => {
 
 	next();
 };
+
+
+
+
+	export async function getAuthCookie() {
+		const response = await request(app)
+			.post("/api/auth/sign-in/email")
+			.set("Origin", process.env.BASE_URL || "http://localhost:3000")
+			.send({ email: "pedrolk2012@gmail.com", password: "wasd12345" }); // Include any needed fields
+
+			console.log("Response:", response.body);
+		const cookies = response.headers["set-cookie"];
+		return cookies;
+	}
+

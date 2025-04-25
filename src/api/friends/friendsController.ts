@@ -2,7 +2,7 @@ import { friendsTable, user } from "@/db/schemas";
 import { db } from "@/drizzle";
 import { auth } from "@/lib/auth";
 import { fromNodeHeaders } from "better-auth/node";
-import { and, eq, inArray, or } from "drizzle-orm";
+import { and, eq, or } from "drizzle-orm";
 import type { Request, Response } from "express";
 
 export async function getFriends(req: Request, res: Response) {
