@@ -1,4 +1,4 @@
-import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
 
 export const friendsTable = pgTable("friends", {
@@ -33,6 +33,7 @@ export const messages = pgTable("messages", {
 	userToId: text("user_to_id")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
+	notRead: boolean("not_read").default(true),
 	content: text("content").notNull(),
 	sendAt: timestamp("send_at").notNull(),
 });

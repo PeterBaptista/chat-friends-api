@@ -6,28 +6,39 @@ import { and, eq, or } from "drizzle-orm";
 import type { Request, Response } from "express";
 
 export async function getMessages(req: Request, res: Response) {
-	console.log("getMessages");
-	const result = await db.select().from(messages);
+  console.log("getMessages");
+  const result = await db.select().from(messages);
 
-	res.json(result);
+  res.json(result);
 }
 
 export async function getMessagesFromUser(req: Request, res: Response) {
-	const session = await auth.api.getSession({
-		headers: fromNodeHeaders(req.headers),
-	});
+  try {
+    const session = await auth.api.getSession({
+      headers: fromNodeHeaders(req.headers),
+    });
 
-	const { userToId } = req.params;
+    const { userToId } = req.params;
 
-	const result = await db
-		.select()
-		.from(messages)
-		.where(
-			or(
-				and(eq(messages.userToId, userToId), eq(messages.userFromId, session?.user.id ?? "")),
-				and(eq(messages.userFromId, userToId), eq(messages.userToId, session?.user.id ?? "")),
-			),
-		);
+    const result = await db
+      .select()
+      .from(messages)
+      .where(
+        or(
+          and(
+            eq(messages.userToId, userToId),
+            eq(messages.userFromId, session?.user.id ?? "")
+          ),
+          and(
+            eq(messages.userFromId, userToId),
+            eq(messages.userToId, session?.user.id ?? "")
+          )
+        )
+      );
 
-	res.json(result);
+    res.json(result);
+  } catch (error) {
+    console.error("Error fetching messages:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 }
