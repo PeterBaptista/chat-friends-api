@@ -67,7 +67,7 @@ export async function getFriends(req: Request, res: Response) {
       .selectDistinct({
         id: user.id,
         name: user.name,
-        email: user.email,
+
         image: user.image,
       })
       .from(friendsTable)

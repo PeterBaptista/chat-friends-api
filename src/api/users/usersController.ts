@@ -18,7 +18,11 @@ export async function getUsers(req: Request, res: Response) {
     }
 
     const result = await db
-      .select()
+      .select({
+        id: user.id,
+        name: user.name,
+        image: user.image,
+      })
       .from(user)
       .where(and(...filters));
 
@@ -46,7 +50,14 @@ export async function getUserById(req: Request, res: Response) {
       res.status(400).json({ error: "Invalid user ID" });
     }
 
-    const result = await db.select().from(user).where(eq(user.id, id));
+    const result = await db
+      .select({
+        id: user.id,
+        name: user.name,
+        image: user.image,
+      })
+      .from(user)
+      .where(eq(user.id, id));
 
     res.json(result?.[0] ?? null);
   } catch (error) {
